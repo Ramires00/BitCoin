@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'dart:core';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -12,19 +13,21 @@ class Home extends StatefulWidget {
  class _HomeState extends State<Home> {
   @override
 
+  String _value = '';
 
  void _valorBitcoin() async {
-    String url = "https://blockchain.info/ticker";
-    http.Response response;
+   String _url = "https://blockchain.info/ticker";
+   http.Response response;
 
-    response = await http.get(url);
-    Map<String, dynamic> retorno = jsonDecode((response.body));
-    setState(() {
-      String _value = retorno ["BRL"]["buy"].toString();
-    });
-    print("Resultado : " + retorno ["BRL"]["buy"].toString() );
-
+   response = await http.get (Uri.parse(_url));
+   Map<String, dynamic> retorno = jsonDecode((response.body));
+   setState(() {
+     _value = retorno ["BRL"]["buy"].toString();
+   });
+   print("Resultado : " + retorno ["BRL"]["buy"].toString());
+ }
   Widget build(BuildContext context) {
+    _valorBitcoin();
     return Scaffold(
       backgroundColor: Colors.white30,
       body: Container(
@@ -37,7 +40,7 @@ class Home extends StatefulWidget {
                 padding: EdgeInsets.only(top: 30, bottom: 30),
               ),
               Text(
-                "R\$" +_value,
+                "R\$" + _value,
                 style: TextStyle(
                 fontSize: 35,
                 fontWeight: FontWeight.bold,
@@ -58,12 +61,5 @@ class Home extends StatefulWidget {
         ),
       ),
     );
-  }
-}
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
   }
 }
